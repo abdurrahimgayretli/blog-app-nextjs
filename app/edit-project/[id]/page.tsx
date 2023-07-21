@@ -5,7 +5,7 @@ import { getBlogByID } from "@/lib/actions";
 import { getCurrentUser } from "@/lib/session";
 import { redirect } from "next/navigation";
 
-const EditProject = async ({ params: { id } }: { params: { id: string } }) => {
+const EditBlog = async ({ params: { id } }: { params: { id: string } }) => {
   const session = await getCurrentUser();
 
   const result = (await getBlogByID(id)) as BlogInterface;
@@ -13,11 +13,11 @@ const EditProject = async ({ params: { id } }: { params: { id: string } }) => {
   if (session?.user.email !== result.createdBy.email) redirect("/");
   return (
     <>
-      <h3 className="modal-head-text">Edit Project</h3>
+      <h3 className="modal-head-text">Edit Blog</h3>
 
       <BlogForm type="edit" session={session} blog={result} />
     </>
   );
 };
 
-export default EditProject;
+export default EditBlog;
