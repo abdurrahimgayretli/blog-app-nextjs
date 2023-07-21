@@ -6,7 +6,6 @@ const serverUrl = isProduction
   ? process.env.NEXT_PUBLIC_SERVER_URL
   : "http://localhost:3000";
 
-
 export const uploadImage = async (
   imagePath: string,
   crop: any,
@@ -28,11 +27,12 @@ export const uploadImage = async (
 };
 
 export const fetchAllBlogs = async (currentPage: number) => {
-  const queryParams = { page: 1, pagination: 3 };
+  const queryParams = { page: 0, pagination: 4};
   queryParams["page"] = currentPage;
 
   const res = await fetch(`${serverUrl}/api/posts`, {
     method: "POST",
+    cache: "no-store",
     body: JSON.stringify(queryParams),
   });
 

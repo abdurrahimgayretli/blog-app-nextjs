@@ -49,7 +49,7 @@ const CommentArea = ({
     } finally {
       router.refresh();
       setIsSubbmiting(false);
-      setForm({ email: "", name: "", comment: ""});
+      setForm({ email: "", name: "", comment: "" });
     }
   };
   return (
@@ -80,6 +80,7 @@ const CommentArea = ({
       </div>
       <form onSubmit={handleFormSubmit}>
         <FormField
+          data-test="comment"
           title="Comment"
           isTextArea={true}
           state={form.comment}
@@ -89,12 +90,14 @@ const CommentArea = ({
         {!session?.user && (
           <div className="grid grid-cols-2 gap-5 mt-5">
             <FormField
+              data-test="name"
               title="Name"
               state={form.name}
               placeholder="Abdurrahim"
               setState={(value) => handleStateChange("name", value)}
             />
             <FormField
+              data-test="email"
               title="Email"
               state={form.email}
               placeholder="Abdurrahim@gmail.com"

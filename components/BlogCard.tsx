@@ -24,6 +24,7 @@ const BlogCard = ({ id, image, title, content, createdBy }: Props) => {
         <div className="absolute top-0 left-0 w-full h-full bg-blur"></div>
         <div className="relative z-10 ">
           <Link
+            data-test="blogCard"
             href={`/project/${id}`}
             className="flexCenter group relative h-[30vh] w-[30vw]"
           >

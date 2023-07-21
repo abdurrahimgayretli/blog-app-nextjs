@@ -4,13 +4,13 @@ import Post from "@/models/Post";
 
 export const GET = async (request: Request) => {
   const url = new URL(request.url);
-  
+
   const email = url.searchParams.get("email");
 
   try {
     await connect();
 
-    const posts = await Post.find({ email })
+    const posts = await Post.find({ email });
 
     return new NextResponse(JSON.stringify(posts), { status: 200 });
   } catch (err) {
@@ -22,17 +22,14 @@ export const POST = async (request: Request) => {
   const url = new URL(request.url);
   const body = await request.json();
 
-  const pagination = parseInt(body.padination);
-  const pageNumber = parseInt(body.page);
-
   const email = url.searchParams.get("email");
 
   try {
     await connect();
 
     const posts = await Post.find({ email })
-      .skip((pageNumber - 1) * pagination)
-      .limit(pagination);
+      .skip(body.page * body.pagination)
+      .limit(body.pagination);
 
     return new NextResponse(JSON.stringify(posts), { status: 200 });
   } catch (err) {

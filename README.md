@@ -14,6 +14,14 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Running test on localhost
+
+Run the test after seeing the home page on localhost.
+
+```bash
+npm run test
+```
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

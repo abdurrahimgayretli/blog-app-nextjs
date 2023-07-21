@@ -14,8 +14,9 @@ const BlogActions = ({ projectId }: { projectId: string }) => {
     setisDeleting(true);
 
     try {
-      await deleteBlog(projectId,-1);
+      await deleteBlog(projectId, -1);
 
+      router.refresh();
       router.push("/");
     } catch (error) {
     } finally {

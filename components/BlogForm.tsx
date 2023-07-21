@@ -87,12 +87,12 @@ const BlogForm = ({ type, session, blog }: Props) => {
 
         if (type === "edit") {
           updatePost({ title, content, img }, session, blog?._id);
-          router.refresh();
-          router.push("/");
         }
       } catch (error) {
         console.log(error);
       } finally {
+        router.refresh();
+        router.push("/");
         setIsSubbmiting(false);
       }
     }
