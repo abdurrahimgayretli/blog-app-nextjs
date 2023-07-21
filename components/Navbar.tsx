@@ -18,7 +18,7 @@ const Navbar = async() => {
           <>
             <ProfileMenu session={session} />
 
-            <Link href={"/create-project"}>Share Work</Link>
+            <Link href={"/create-project"}>Share Blog</Link>
           </>
         ) : (
           <Link href={"/login"}>
