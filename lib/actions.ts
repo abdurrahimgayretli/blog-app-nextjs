@@ -1,61 +1,117 @@
-import { NextResponse } from "next/server";
-import connect from "@/utils/db";
-import Post from "@/models/Post";
+import { notFound } from "next/navigation";
+import { SessionInterface } from "@/common.types";
 
 const isProduction = process.env.NODE_ENV === "production";
-const apiKey = isProduction
-  ? process.env.NEXT_PUBLIC_MONGO || ""
-  : "letmein";
 const serverUrl = isProduction
   ? process.env.NEXT_PUBLIC_SERVER_URL
   : "http://localhost:3000";
 
-export const fetchToken = async () => {
+
+export const uploadImage = async (
+  imagePath: string,
+  crop: any,
+  size: { width: number; height: number }
+) => {
   try {
-    const response = await fetch(`${serverUrl}/api/auth/token`);
+    const response = await fetch(`${serverUrl}/api/upload`, {
+      method: "POST",
+      body: JSON.stringify({
+        path: imagePath,
+        crop,
+        size,
+      }),
+    });
     return response.json();
   } catch (err) {
     throw err;
   }
 };
 
-export const getBlog = async (request: Request) => {
-  const url = new URL(request.url);
+export const fetchAllBlogs = async (currentPage: number) => {
+  const queryParams = { page: 1, pagination: 3 };
+  queryParams["page"] = currentPage;
 
-  const username = url.searchParams.get("username");
+  const res = await fetch(`${serverUrl}/api/posts`, {
+    method: "POST",
+    body: JSON.stringify(queryParams),
+  });
 
-  try {
-    await connect();
-
-    const posts = await Post.find({username});
-
-    return new NextResponse(JSON.stringify(posts), { status: 200 });
-  } catch (err) {
-    return new NextResponse("Database Error", { status: 500 });
-  }
-};
-
-export const createNewBlog = async (request: Request) => {
-  const body = await request.json();
-
-  const newPost = new Post(body);
-
-  try {
-    await connect();
-
-    await newPost.save();
-
-    return new NextResponse("Post has been created", { status: 201 });
-  } catch (err) {
-    return new NextResponse("Database Error", { status: 500 });
-  }
-};
-
-export const fetchAllBlogs = async () => {
-  const res = await fetch("https://64b7ffa321b9aa6eb0796a57.mockapi.io/blog");
   if (!res.ok) {
     throw new Error("Failed to fetch data");
   }
 
   return res.json();
+};
+
+export const getBlogByID = async (id: string) => {
+  const res = await fetch(`${serverUrl}/api/posts/${id}`, {
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    return notFound();
+  }
+
+  return res.json();
+};
+
+export const deleteBlog = async (id: string, i: number) => {
+  try {
+    await fetch(`/api/posts/${id}`, {
+      method: "DELETE",
+      body: JSON.stringify(i),
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const fetchPost = async (
+  form: { title: string; content: string; img: string },
+  session: SessionInterface
+) => {
+  try {
+    const response = await fetch(`${serverUrl}/api/posts`, {
+      method: "PUT",
+      body: JSON.stringify({
+        title: form.title,
+        content: form.content,
+        img: form.img,
+        comments: [],
+        createdBy: {
+          name: session.user?.name,
+          email: session.user?.email,
+          avatarUrl: session.user?.image,
+        },
+      }),
+    });
+    return response.json();
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const updatePost = async (
+  form: { title: string; content: string; img: string },
+  session: SessionInterface,
+  id: string | undefined
+) => {
+  try {
+    const response = await fetch(`${serverUrl}/api/posts/${id}`, {
+      method: "PUT",
+      body: JSON.stringify({
+        title: form.title,
+        content: form.content,
+        img: form.img,
+        createdBy: {
+          name: session.user?.name,
+          email: session.user?.email,
+          avatarUrl: session.user?.image,
+        },
+      }),
+    });
+    return response.json();
+  } catch (err) {
+    throw err;
+  }
 };

@@ -5,36 +5,56 @@ type Props = {
   id: string;
   image: string;
   title: string;
-  name: string;
   content: string;
+  createdBy: { name: string; email: string; avatarUrl: string | undefined };
 };
 
-const BlogCard = ({ id, image, title, name, content }: Props) => {
-  const summaryDesc = content?.slice(0, 100) + "...";
+const BlogCard = ({ id, image, title, content, createdBy }: Props) => {
+  const summaryDesc = content?.slice(0, 200) + "...";
 
   return (
-    <div className="flexCenter flex-row rounded-2xl gap-10">
-      <Link
-        href={`/project/${id}`}
-        className="group relative w-full h-full"
-      >
+    <div className="flexCenter flex-col rounded-2xl drop-shadow-md mb-10">
+      <div className="relative">
         <Image
           src={image}
-          width={314}
-          height={214}
+          alt="Arka Plan Resmi"
           className="w-full h-full object-cover rounded-2xl"
-          alt="Project Image"
+          fill
         />
-      </Link>
-
-      <div className="flexCenter w-full h-full">
-        <h1 className="font-semibold md:text-base sm:text-sm text-base">
-          {title}
-          <p className="mt-5 font-serif font-normal  md:text-base sm:text-sm text-sm">
-            {summaryDesc}
-          </p>
-        </h1>
+        <div className="absolute top-0 left-0 w-full h-full bg-blur"></div>
+        <div className="relative z-10 ">
+          <Link
+            href={`/project/${id}`}
+            className="flexCenter group relative h-[30vh] w-[30vw]"
+          >
+            <Image
+              src={image}
+              className="w-full h-full object-contain object-center"
+              fill
+              alt="Project Image"
+            />
+          </Link>
+        </div>
       </div>
+
+      <div className="flexBetween w-full px-2 mt-3 font-semibold text-sm">
+        <Link href={`/profile/${id}`}>
+          <div className="flexCenter gap-2">
+            <Image
+              src={createdBy?.avatarUrl || "/user.png"}
+              width={24}
+              height={24}
+              className="rounded-full"
+              alt="Profile Image"
+            />
+            <p>{createdBy?.name}</p>
+          </div>
+        </Link>
+        <div className="">
+          <h1 className="w-full capitalize">{title}</h1>
+        </div>
+      </div>
+      <p className="m-10 h-16">{summaryDesc}</p>
     </div>
   );
 };

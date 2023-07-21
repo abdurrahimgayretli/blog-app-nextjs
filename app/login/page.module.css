@@ -6,13 +6,14 @@
 }
 
 .title {
-  color: #bbb;
+  margin-top: 50px;
+  color: #2c2222;
 }
 
 .subtitle {
   font-size: 20px;
   margin-bottom: 30px;
-  color: #bbb;
+  color: #2c2222;
 }
 
 .form {
@@ -49,7 +50,7 @@
 }
 
 .or {
-  color: #bbb;
+  color: #2c2222;
 }
 
 .link {

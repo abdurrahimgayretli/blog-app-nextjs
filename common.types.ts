@@ -9,21 +9,33 @@ export type FormState = {
 export interface BlogInterface {
   title: string;
   content: string;
-  image: string;
-  id: string;
+  img: string;
+  _id: string;
+  comments: [
+    { comment: string; name: string; email: string; avatarUrl?: string }
+  ];
   createdBy: {
     name: string;
     email: string;
-    avatarUrl: string | null;
-    id: string;
+    avatarUrl: string | undefined;
   };
 }
 
-export interface UserProfile {
+export interface BlogMockInterface {
+  title: string;
+  content: string;
+  img: string;
   id: string;
   name: string;
   email: string;
-  avatarUrl: string;
+  avatarUrl: string | undefined;
+}
+
+export interface UserProfile {
+  _id: string;
+  name: string;
+  email: string;
+  avatarUrl?: string;
   blogs: {
     edges: { node: BlogInterface }[];
     pageInfo: {
@@ -37,13 +49,14 @@ export interface UserProfile {
 
 export interface SessionInterface extends Session {
   user: User & {
-    id: string;
+    _id: string;
     username: string;
     email: string;
+    avatarUrl?: string;
   };
 }
 
-export interface ProjectForm {
+export interface BlogForm {
   title: string;
   description: string;
   image: string;

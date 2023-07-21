@@ -1,49 +1,31 @@
 import { BlogInterface } from "@/common.types";
 import BlogCard from "@/components/BlogCard";
+import LoadMore from "@/components/LoadMore";
 import { fetchAllBlogs } from "@/lib/actions";
-import Image from "next/image";
 
-type BlogSearch = {
-  blogSearch: {
-    edges: { node: BlogInterface }[];
-    pageInfo: {
-      hasPreviousPage: boolean;
-      hasNextPage: boolean;
-      startCursor: string;
-      endCursor: string;
-    };
-  };
-};
+export default async function Home({ searchParams }: any) {
+  const data = await fetchAllBlogs(Number(searchParams.page) || 0);
 
-type SearchParams = {
-  category?: string;
-  endcursor?: string;
-};
-
-type Props = {
-  searchParams: SearchParams;
-};
-
-export default async function Home() {
-  const data = await fetchAllBlogs();
-  console.log(data);
-  
-
-  const projectsToDisplay = data?.projectSearch?.edges || [];
   return (
-    <section className="flex-start flex-col paddings mb-16">
+    <section className="flexCenter flex-col paddings mb-16">
       <section className="projects-grid">
-        {data.map((blog:any) => (
+        {data.map((blog: BlogInterface) => (
           <BlogCard
-            key={blog?.id}
-            id={blog?.id}
-            image={blog?.image}
+            key={blog?._id}
+            id={blog?._id}
+            image={blog?.img}
             title={blog?.title}
-            name={blog?.createdBy?.name || blog?.name}
+            createdBy={blog?.createdBy}
             content={blog?.content}
           />
         ))}
       </section>
+      <div>
+        <LoadMore
+          pageNumber={Number(searchParams.page || 1)}
+          isNext={searchParams.page * 4 > data.length || data.length === 0}
+        />
+      </div>
     </section>
   );
 }

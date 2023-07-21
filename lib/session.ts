@@ -1,12 +1,8 @@
 import { getServerSession } from "next-auth/next";
 import { NextAuthOptions } from "next-auth";
-import { AdapterUser } from "next-auth/adapters";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import jsonwebtoken from "jsonwebtoken";
-import { JWT } from "next-auth/jwt";
-import { SessionInterface, UserProfile } from "@/common.types";
-import NextAuth from "next-auth";
+import { SessionInterface } from "@/common.types";
 import User from "@/models/User";
 import connect from "@/utils/db";
 import bcrypt from "bcrypt";
@@ -21,7 +17,6 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password:", type: "password" },
       },
       async authorize(credentials) {
-        //Check if the user exists.
         await connect();
 
         try {

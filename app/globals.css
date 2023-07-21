@@ -14,8 +14,8 @@ body {
   font-family: Inter;
 }
 
-.logo{
-  @apply font-bold text-2xl
+.logo {
+  @apply font-bold text-2xl;
 }
 
 .flexCenter {
@@ -168,3 +168,9 @@ body {
 .profile_projects {
   @apply grid xl:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-8 mt-5;
 }
+
+.bg-blur {
+  /* İstediğiniz bulanıklık miktarını buradan ayarlayabilirsiniz */
+  @apply backdrop-blur-md
+}
+

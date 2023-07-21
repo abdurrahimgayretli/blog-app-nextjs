@@ -52,7 +52,7 @@ const ProfileMenu = ({ session }: { session: SessionInterface }) => {
             <div className="flex flex-col gap-3 pt-10 items-start w-full">
               <Menu.Item>
                 <Link
-                  href={`/profile/${session?.user?.id}`}
+                  href={`/`}
                   className="text-sm"
                 >
                   Work Preferences
@@ -60,7 +60,7 @@ const ProfileMenu = ({ session }: { session: SessionInterface }) => {
               </Menu.Item>
               <Menu.Item>
                 <Link
-                  href={`/profile/${session?.user?.id}`}
+                  href={`/`}
                   className="text-sm"
                 >
                   Settings
@@ -68,7 +68,7 @@ const ProfileMenu = ({ session }: { session: SessionInterface }) => {
               </Menu.Item>
               <Menu.Item>
                 <Link
-                  href={`/profile/${session?.user?.id}`}
+                  href={`/`}
                   className="text-sm"
                 >
                   Profile

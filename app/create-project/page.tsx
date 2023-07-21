@@ -1,5 +1,5 @@
-import Modal from "@/components/Modal";
-import ProjectForm from "@/components/ProjectForm";
+
+import ProjectForm from "@/components/BlogForm";
 import { getCurrentUser } from "@/lib/session";
 import { redirect } from "next/navigation";
 

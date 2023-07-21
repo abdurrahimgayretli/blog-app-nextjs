@@ -5,9 +5,14 @@ import Image from "next/image";
 import { ChangeEvent, useState } from "react";
 import FormField from "./FormField";
 import Button from "./Button";
-import { createNewBlog, fetchToken } from "@/lib/actions";
+import { fetchPost, updatePost, uploadImage } from "@/lib/actions";
 import { useRouter } from "next/navigation";
-import ReactCrop, { type Crop } from "react-image-crop";
+import ReactCrop, {
+  centerCrop,
+  makeAspectCrop,
+  type Crop,
+  PixelCrop,
+} from "react-image-crop";
 
 type Props = {
   type: string;
@@ -15,53 +20,81 @@ type Props = {
   blog?: BlogInterface;
 };
 
+function centerAspectCrop(
+  mediaWidth: number,
+  mediaHeight: number,
+  aspect: number
+) {
+  return centerCrop(
+    makeAspectCrop(
+      {
+        unit: "px",
+        width: 90,
+      },
+      aspect,
+      mediaWidth,
+      mediaHeight
+    ),
+    mediaWidth,
+    mediaHeight
+  );
+}
+
 const BlogForm = ({ type, session, blog }: Props) => {
   const router = useRouter();
 
   const [crop, setCrop] = useState<Crop>({
-    unit: "%", // Can be 'px' or '%'
+    unit: "px", // Can be 'px' or '%'
     x: 25,
     y: 25,
-    width: 50,
-    height: 50,
+    width: 100,
+    height: 100,
   });
+  const [aspect] = useState(undefined);
+  const [completedCrop, setCompletedCrop] = useState<PixelCrop>();
+  const [isSubmitting, setIsSubbmiting] = useState(false);
+  const [form, setForm] = useState({
+    image: blog?.img || "",
+    title: blog?.title || "",
+    content: blog?.content || "",
+  });
+  const [size, setSize] = useState({ width: 0, height: 0 });
+
+  function onImageLoad(e: React.SyntheticEvent<HTMLImageElement>) {
+    if (aspect) {
+      const { width, height } = e.currentTarget;
+      setCrop(centerAspectCrop(width, height, aspect));
+    }
+  }
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const title = form.title;
-    const content = form.content;
-    const img = form.image;
-
     setIsSubbmiting(true);
 
-    const { token } = await fetchToken();
+    const imageUrl = await uploadImage(form.image, completedCrop || crop, size);
+    const title = form.title;
+    const content = form.content;
+    const img = imageUrl.url;
 
-    try {
-      if (type === "create") {
-        await fetch("/api/posts", {
-          method: "POST",
-          body: JSON.stringify({
-            title,
-            content,
-            img,
-            username: session.user.id,
-          }),
-        });
+    if (imageUrl.url) {
+      try {
+        if (type === "create") {
+          fetchPost({ title, content, img }, session);
+          router.refresh();
+          router.push("/");
+        }
 
-        router.push("/");
+        if (type === "edit") {
+          updatePost({ title, content, img }, session, blog?._id);
+          router.refresh();
+          router.push("/");
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsSubbmiting(false);
       }
-
-      if (type === "edit") {
-        //await updateProject(form, project?.id as string, token);
-
-        router.refresh();
-        router.push("/");
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsSubbmiting(false);
     }
   };
 
@@ -91,13 +124,6 @@ const BlogForm = ({ type, session, blog }: Props) => {
     setForm((prevState) => ({ ...prevState, [fieldName]: value }));
   };
 
-  const [isSubmitting, setIsSubbmiting] = useState(false);
-  const [form, setForm] = useState({
-    image: blog?.image || "",
-    title: blog?.title || "",
-    content: blog?.content || "",
-  });
-
   return (
     <form onSubmit={handleFormSubmit} className="flexStart form">
       <div className="flexStart gap-5">
@@ -105,13 +131,26 @@ const BlogForm = ({ type, session, blog }: Props) => {
           {!form.image && "Choose a poster for your project"}
         </label>
         {form.image && (
-          <ReactCrop crop={crop} onChange={(c) => setCrop(c)}>
+          <ReactCrop
+            crop={crop}
+            onChange={(_, percentCrop) => setCrop(percentCrop)}
+            onComplete={(c) => setCompletedCrop(c)}
+            aspect={aspect}
+          >
             <Image
+              id="img"
               src={form?.image}
-              className="object-cover"
+              className="object-cover w-full h-full"
               alt="Project poster"
-              width={500}
-              height={500}
+              width={414}
+              height={314}
+              onLoad={onImageLoad}
+              onLoadingComplete={(e) => {
+                setSize({
+                  width: e.clientWidth,
+                  height: e.clientHeight,
+                });
+              }}
             />
           </ReactCrop>
         )}

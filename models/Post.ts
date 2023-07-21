@@ -16,9 +16,11 @@ const postSchema = new Schema(
       type: String,
       required: true,
     },
-    username: {
-      type: String,
-      required: true,
+    comments: { type: Array, default: [] },
+    createdBy: {
+      name: { type: String },
+      email: { type: String },
+      avatarUrl: { type: String },
     },
   },
   { timestamps: true }
