@@ -7,6 +7,7 @@ To get started, just clone the repository and run `npm install && npm run dev`:
 
 ```bash
 git clone https://github.com/abdurrahimgayretli/blog-app-nextjs.git
+cd blog-app-nextjs
 npm install
 npm run dev
 ```
