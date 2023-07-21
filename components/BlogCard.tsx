@@ -32,21 +32,21 @@ const BlogCard = ({ id, image, title, content, createdBy }: Props) => {
               src={image}
               className="w-full h-full object-contain object-center"
               fill
-              alt="Project Image"
+              alt="Blog Image"
             />
           </Link>
         </div>
       </div>
 
       <div className="flexBetween w-full px-2 mt-3 font-semibold text-sm">
-        <Link href={`/profile/${id}`}>
+        <Link href={`/`}>
           <div className="flexCenter gap-2">
             <Image
               src={createdBy?.avatarUrl || "/user.png"}
               width={24}
               height={24}
               className="rounded-full"
-              alt="Profile Image"
+              alt="Blog Image"
             />
             <p>{createdBy?.name}</p>
           </div>
