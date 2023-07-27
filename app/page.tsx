@@ -28,7 +28,7 @@ export default async function Home({ searchParams }: any) {
       </section>
       <div>
         <LoadMore
-          pageNumber={Number(searchParams.page || 1)}
+          pageNumber={Number(searchParams.page || 0)}
           isNext={4 === data.length}
           length={data.length}
         />
