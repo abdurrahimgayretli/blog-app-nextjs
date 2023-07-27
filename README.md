@@ -1,5 +1,8 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## Configuring
+
+Edit a .env files ([.env.example](https://github.com/abdurrahimgayretli/blog-app-nextjs/blob/master/.env.example) to '.env' and fill in the options)
 
 ## Running locally in development mode
 
